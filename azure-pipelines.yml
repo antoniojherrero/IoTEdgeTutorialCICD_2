@@ -40,3 +40,24 @@ stages:
           python3.9 -m pip install -U iotedgedev pyOpenSSL==22.0.0 urllib3==1.22 requests
         displayName: 'Command line script'
       
+      - task: AzureIoTEdge@2
+        inputs:
+          action: 'Generate deployment manifest'
+          templateFilePath: 'deployment.template.json'
+          defaultPlatform: 'amd64'
+          deploymentManifestOutputPath: '$(System.DefaultWorkingDirectory)/config/deployment.json'
+          validateGeneratedDeploymentManifest: 'true'
+        displayName: 'Generate deployment manifest'
+      
+      - task: AzureIoTEdge@2
+        inputs:
+          action: 'Deploy to IoT Edge devices'
+          deploymentFilePath: '$(System.DefaultWorkingDirectory)/config/deployment.json'
+          azureSubscription: 'Azure for Students(44ce97e3-34a1-492a-b2f3-e35619620a94)'
+          iothubname: ''
+          deploymentid: '$(System.TeamProject)-devops-deployment'
+          priority: '0'
+          deviceOption: 'Single Device'
+
+
+      
